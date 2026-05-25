@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>You Are Not a Bar Chart — Data Humanist Noticeboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+DW+Pica:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --p:#F2E8CC;
+  --p2:#E8DDB8;
+  --ink:#241508;
+  --rust:#B83815;
+  --gold:#B8900A;
+  --brown:#7A5230;
+  --light-brown:#A87848;
+  --warm-white:rgba(255,248,230,0.55);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background-color:var(--p);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 10% 30%, rgba(160,100,40,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 70%, rgba(184,56,21,0.06) 0%,transparent 50%);
+  color:var(--ink);
+  font-family:'IM Fell English',Georgia,'Times New Roman',serif;
+  line-height:1.65;
+  min-height:100vh;
+}
+
+.wrap{max-width:720px;margin:0 auto;padding:0 22px 80px}
+
+/* ─── Header ─── */
+.site-header{
+  text-align:center;
+  padding:56px 0 38px;
+  position:relative;
+}
+.site-header::after{
+  content:'';display:block;width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(36,21,8,0.22),transparent);
+  margin-top:34px;
+}
+.ornament{
+  display:block;font-size:10px;letter-spacing:10px;
+  color:var(--rust);margin-bottom:22px;
+}
+h1{
+  font-size:clamp(2rem,6vw,3.2rem);font-weight:normal;
+  font-style:italic;line-height:1.15;margin-bottom:14px;
+}
+.header-note{
+  font-size:0.88rem;color:var(--brown);font-style:italic;
+  max-width:460px;margin:0 auto;line-height:1.55;
+}
+
+/* ─── Definition ─── */
+.def-box{
+  margin:44px 0 40px;
+  padding:24px 30px 24px 26px;
+  border:1px solid rgba(36,21,8,0.13);
+  border-left:3px solid var(--rust);
+  background:var(--warm-white);
+  position:relative;
+}
+.def-box::before{
+  content:'data humanism';
+  position:absolute;top:-9px;left:22px;
+  background:var(--p);
+  padding:0 8px;
+  font-size:0.65rem;letter-spacing:3px;
+  font-style:italic;color:var(--rust);
+}
+.def-box p{font-size:0.95rem;line-height:1.72;color:#301A08;}
+
+/* ─── Question ─── */
+.q-block{text-align:center;margin:46px 0 30px}
+.q-label{
+  display:block;font-size:0.68rem;letter-spacing:4px;
+  text-transform:uppercase;color:var(--light-brown);margin-bottom:18px;
+}
+h2.question{
+  font-size:clamp(1.15rem,3.2vw,1.6rem);font-weight:normal;
+  font-style:italic;line-height:1.45;
+  max-width:540px;margin:0 auto 14px;
+}
+.q-instr{font-size:0.82rem;color:var(--brown);font-style:italic;}
+
+/* ─── Specimen grid ─── */
+.specimen-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;margin:28px 0 18px;
+}
+@media(max-width:440px){.specimen-grid{grid-template-columns:repeat(3,1fr)}}
+
+.s-card{
+  border:1px solid rgba(36,21,8,0.12);
+  background:rgba(255,248,230,0.28);
+  padding:16px 8px 11px;
+  text-align:center;cursor:pointer;
+  transition:transform 0.17s ease,border-color 0.17s,background 0.17s;
+  position:relative;user-select:none;
+}
+.s-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(184,56,21,0.38);
+  background:rgba(255,248,230,0.6);
+}
+.s-card.sel{
+  border:2px solid var(--rust);
+  background:rgba(184,56,21,0.07);
+  transform:translateY(-2px);
+}
+.s-card .tick{
+  display:none;position:absolute;top:5px;right:7px;
+  color:var(--rust);font-size:10px;font-style:normal;
+}
+.s-card.sel .tick{display:block}
+.s-name{
+  display:block;font-size:0.66rem;letter-spacing:1.5px;
+  font-style:italic;color:var(--brown);margin-top:7px;
+  line-height:1.15;
+}
+
+/* ─── Custom ─── */
+.custom-row{
+  display:flex;align-items:center;gap:11px;
+  margin:4px 0 22px;
+  font-size:0.85rem;font-style:italic;color:var(--brown);
+}
+.custom-row input{
+  flex:1;padding:9px 13px;
+  border:1px solid rgba(36,21,8,0.17);
+  background:rgba(255,248,230,0.5);
+  font-family:'IM Fell English',Georgia,serif;
+  font-size:0.88rem;font-style:italic;color:var(--ink);
+  outline:none;transition:border-color 0.15s,background 0.15s;
+}
+.custom-row input:focus{border-color:var(--rust);background:rgba(255,248,230,0.8)}
+
+/* ─── Note ─── */
+.note-block{margin:6px 0 22px}
+.note-block label{
+  display:block;font-style:italic;color:var(--brown);
+  font-size:0.86rem;margin-bottom:10px;
+}
+textarea{
+  width:100%;padding:13px 15px;
+  border:1px solid rgba(36,21,8,0.15);
+  background:rgba(255,248,230,0.4);
+  font-family:'IM Fell English',Georgia,serif;
+  font-size:0.93rem;font-style:italic;color:var(--ink);
+  resize:vertical;min-height:88px;line-height:1.65;
+  outline:none;transition:border-color 0.15s,background 0.15s;
+}
+textarea:focus{border-color:var(--rust);background:rgba(255,248,230,0.7)}
+
+/* ─── Submit ─── */
+.form-foot{text-align:center;margin-top:14px}
+.sub-btn{
+  padding:12px 50px;
+  background:var(--ink);color:var(--p);
+  font-family:'IM Fell English',Georgia,serif;
+  font-size:1rem;font-style:italic;border:none;
+  cursor:pointer;letter-spacing:1px;
+  transition:background 0.2s,transform 0.1s;
+}
+.sub-btn:hover:not(:disabled){background:var(--rust)}
+.sub-btn:active:not(:disabled){transform:scale(0.98)}
+.sub-btn:disabled{background:var(--light-brown);cursor:not-allowed;opacity:0.65}
+.anon-note{
+  font-size:0.72rem;font-style:italic;color:var(--light-brown);
+  margin-top:10px;display:block;
+}
+
+/* ─── Thank you ─── */
+.thank-you{
+  display:none;text-align:center;
+  padding:36px;margin:20px 0;
+  border:1px solid rgba(184,56,21,0.22);
+  background:rgba(184,56,21,0.04);
+}
+.thank-you.vis{display:block;animation:fadein 0.5s ease}
+.thank-you h3{
+  font-weight:normal;font-style:italic;
+  font-size:1.45rem;margin-bottom:10px;color:var(--rust);
+}
+.thank-you p{font-size:0.88rem;color:var(--brown);font-style:italic}
+
+/* ─── Divider ─── */
+.orn-div{
+  text-align:center;margin:54px 0 40px;
+  position:relative;
+}
+.orn-div::before{
+  content:'';display:block;width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(36,21,8,0.18),transparent);
+  position:absolute;top:50%;
+}
+.orn-div span{
+  background:var(--p);padding:0 18px;
+  font-size:0.66rem;letter-spacing:5px;
+  color:var(--brown);font-style:italic;position:relative;
+}
+
+/* ─── Cabinet ─── */
+.cab-header{text-align:center;margin-bottom:28px}
+.cab-header h2{
+  font-weight:normal;font-style:italic;
+  font-size:1.5rem;margin-bottom:8px;
+}
+.cab-header p{font-size:0.84rem;font-style:italic;color:var(--brown)}
+.cab-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(126px,1fr));
+  gap:13px;
+}
+.cab-entry{
+  border:1px solid rgba(36,21,8,0.1);
+  background:rgba(255,248,230,0.22);
+  padding:14px 9px 11px;
+  text-align:center;
+  animation:fadein 0.4s ease;
+}
+.cab-entry .c-name{
+  display:block;font-size:0.67rem;font-style:italic;
+  color:var(--brown);margin-top:5px;letter-spacing:1px;
+}
+.cab-entry .c-note{
+  font-size:0.65rem;color:var(--light-brown);
+  font-style:italic;line-height:1.35;margin-top:6px;
+  border-top:1px solid rgba(36,21,8,0.08);padding-top:6px;
+}
+.cab-empty,.loading-txt{
+  font-style:italic;color:var(--light-brown);
+  font-size:0.88rem;padding:36px 20px;text-align:center;
+  border:1px dashed rgba(36,21,8,0.14);grid-column:1/-1;
+}
+
+/* ─── Footer ─── */
+.site-foot{
+  text-align:center;margin-top:62px;
+  padding-top:22px;
+  border-top:1px solid rgba(36,21,8,0.1);
+  font-size:0.72rem;color:var(--light-brown);
+  font-style:italic;line-height:1.7;
+}
+
+/* ─── Anims ─── */
+@keyframes fadein{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fade{animation:fadein 0.65s ease both}
+.fade:nth-child(2){animation-delay:0.1s}
+.fade:nth-child(3){animation-delay:0.2s}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header fade">
+    <span class="ornament">✦ &nbsp; ✦ &nbsp; ✦</span>
+    <h1>You Are Not a Bar Chart</h1>
+    <p class="header-note">A companion to the data humanist noticeboard installation.<br/>An MDes inquiry into how we represent lives in data.</p>
+  </header>
+
+  <div class="def-box fade">
+    <p>Data humanism looks beyond the graphs and charts of big data to the individual human stories that sit behind them. It asks: what is lost when a life becomes a number? And what might we gain by representing ourselves differently?</p>
+  </div>
+
+  <div class="q-block fade">
+    <span class="q-label">an open question</span>
+    <h2 class="question">If you were to be represented in a data report, how would you like to be represented?</h2>
+    <p class="q-instr">Choose one of the specimens below — or name your own.<br/>Add a note if you wish. All responses are anonymous.</p>
+  </div>
+
+  <!-- FORM -->
+  <div id="form-sec">
+    <div class="specimen-grid" id="spec-grid"></div>
+
+    <div class="custom-row">
+      <span>or, something else entirely:</span>
+      <input type="text" id="custom-in" placeholder="a cloud, a river, a knot in wood…" maxlength="80"/>
+    </div>
+
+    <div class="note-block">
+      <label for="note-in">Tell us a little about why — or describe yourself in your own words. <em style="color:var(--light-brown)">(optional)</em></label>
+      <textarea id="note-in" placeholder="I chose the feather because…" maxlength="360"></textarea>
+    </div>
+
+    <div class="form-foot">
+      <button class="sub-btn" id="sub-btn" disabled>Pin to the board →</button>
+      <span class="anon-note">Your response is anonymous and shared with others who visit this page.</span>
+    </div>
+  </div>
+
+  <div class="thank-you" id="ty">
+    <h3>Thank you for pinning your specimen.</h3>
+    <p>Your choice has been added to the cabinet below,<br/>and will inform future iterations of this project.</p>
+    <p style="margin-top:16px">
+      <a href="#" id="change-mind" style="font-size:0.78rem;font-style:italic;color:var(--brown);text-decoration:underline;text-underline-offset:3px">changed your mind? choose again →</a>
+    </p>
+  </div>
+
+  <div class="orn-div"><span>the cabinet of specimens</span></div>
+
+  <div class="cab-header">
+    <h2>How others chose to be represented</h2>
+    <p>A growing collection of responses from this installation.</p>
+  </div>
+
+  <div class="cab-grid" id="cab-grid">
+    <div class="loading-txt">Loading specimens…</div>
+  </div>
+
+  <footer class="site-foot">
+    <p>MDes008: Design for Social Impact &nbsp;·&nbsp; Sarah-Jane Crowson</p>
+    <p>A data humanist intervention. All responses are anonymous.</p>
+    <p style="margin-top:4px">This site is a companion to a physical noticeboard installation.</p>
+  </footer>
+
+</div>
+
+<script>
+const SPECIMENS=[
+  {
+    id:'mushroom',name:'the mushroom',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <path d="M29,52 Q28,64 35,64 Q42,64 41,52" fill="#D4C4A0" stroke="#9B7A40" stroke-width="0.8"/>
+      <path d="M12,38 Q12,21 35,19 Q58,21 58,38 Z" fill="#C4431A"/>
+      <ellipse cx="35" cy="38" rx="23" ry="5" fill="#A83510" opacity="0.6"/>
+      <path d="M14,37 Q35,42 56,37" fill="none" stroke="#D4C4A0" stroke-width="0.6" opacity="0.45"/>
+      <circle cx="27" cy="28" r="3.8" fill="rgba(244,237,210,0.9)"/>
+      <circle cx="44" cy="26" r="3" fill="rgba(244,237,210,0.9)"/>
+      <circle cx="20" cy="34" r="2.5" fill="rgba(244,237,210,0.9)"/>
+      <circle cx="50" cy="33" r="2.2" fill="rgba(244,237,210,0.9)"/>
+      <circle cx="35" cy="22" r="2" fill="rgba(244,237,210,0.9)"/>
+    </svg>`
+  },
+  {
+    id:'feather',name:'the feather',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <line x1="35" y1="8" x2="35" y2="65" stroke="#8B6930" stroke-width="1.4"/>
+      <path d="M35,13 Q49,19 52,32 Q49,35 35,31" fill="#C8A352" opacity="0.9"/>
+      <path d="M35,25 Q48,31 49,43 Q46,46 35,42" fill="#B89038" opacity="0.85"/>
+      <path d="M35,37 Q44,45 43,56 Q41,58 35,53" fill="#A88028" opacity="0.8"/>
+      <path d="M35,13 Q21,19 18,32 Q21,35 35,31" fill="#C8A352" opacity="0.78"/>
+      <path d="M35,25 Q22,31 21,43 Q24,46 35,42" fill="#B89038" opacity="0.72"/>
+      <path d="M35,37 Q26,45 27,56 Q29,58 35,53" fill="#A88028" opacity="0.68"/>
+    </svg>`
+  },
+  {
+    id:'fish',name:'the fish',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <path d="M54,35 L66,23 L66,47 Z" fill="#C4431A"/>
+      <ellipse cx="33" cy="35" rx="22" ry="13" fill="#2A7A5A"/>
+      <path d="M19,27 Q26,21 33,27 Q26,31 19,27" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.7"/>
+      <path d="M27,23 Q34,17 41,23 Q34,27 27,23" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="0.7"/>
+      <path d="M13,33 Q18,25 25,33 Q18,41 13,33" fill="#C4431A" opacity="0.72"/>
+      <path d="M22,27 Q30,18 40,25" fill="none" stroke="#1A5A3A" stroke-width="1.9" stroke-linecap="round"/>
+      <circle cx="14" cy="34" r="4" fill="#F2E8CC"/>
+      <circle cx="14" cy="34" r="2.5" fill="#1A0A04"/>
+      <circle cx="13.2" cy="33.2" r="0.9" fill="rgba(255,255,255,0.8)"/>
+    </svg>`
+  },
+  {
+    id:'shell',name:'the shell',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <path d="M35,13 Q58,20 60,41 Q55,61 35,63 Q15,61 10,41 Q12,20 35,13 Z" fill="#D4B86A"/>
+      <path d="M35,13 Q37,36 35,63" fill="none" stroke="#B89848" stroke-width="0.9"/>
+      <path d="M35,13 Q53,28 53,61" fill="none" stroke="#B89848" stroke-width="0.85"/>
+      <path d="M35,13 Q17,28 17,61" fill="none" stroke="#B89848" stroke-width="0.85"/>
+      <path d="M35,13 Q44,30 44,62" fill="none" stroke="#B89848" stroke-width="0.75"/>
+      <path d="M35,13 Q26,30 26,62" fill="none" stroke="#B89848" stroke-width="0.75"/>
+      <path d="M28,22 Q30,30 26,38" fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="35" cy="14" rx="5" ry="3" fill="#C4A848"/>
+      <circle cx="31" cy="13" r="1.5" fill="#B89848"/>
+      <circle cx="35" cy="12" r="2.2" fill="#B89848"/>
+      <circle cx="39" cy="13" r="1.5" fill="#B89848"/>
+    </svg>`
+  },
+  {
+    id:'bird',name:'the bird',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <path d="M47,43 L61,51 L56,42 L64,37" fill="#52321A" stroke="#3A2010" stroke-width="0.5"/>
+      <path d="M26,32 Q41,23 53,33 Q47,40 26,38 Z" fill="#3A6842"/>
+      <ellipse cx="33" cy="41" rx="16" ry="11" fill="#D4A44A"/>
+      <circle cx="20" cy="32" r="10" fill="#3A6842"/>
+      <ellipse cx="28" cy="44" rx="8" ry="6" fill="#C46048"/>
+      <circle cx="17" cy="30" r="2.8" fill="#1A0A04"/>
+      <circle cx="16.2" cy="29.2" r="0.9" fill="rgba(255,255,255,0.75)"/>
+      <path d="M10,31 L17,29.5 L17,33 Z" fill="#C4A030"/>
+      <line x1="10" y1="57" x2="16" y2="49" stroke="#8B6930" stroke-width="1.5"/>
+      <line x1="17" y1="57" x2="20" y2="49" stroke="#8B6930" stroke-width="1.5"/>
+    </svg>`
+  },
+  {
+    id:'flower',name:'the flower',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <line x1="35" y1="61" x2="35" y2="47" stroke="#4A7A2A" stroke-width="2.5"/>
+      <path d="M35,52 Q23,46 21,40 Q30,42 35,52" fill="#5A8A3A"/>
+      <ellipse cx="35" cy="30" rx="13" ry="9" fill="#C45068" transform="rotate(0 35 35)"/>
+      <ellipse cx="35" cy="30" rx="13" ry="9" fill="#C45068" transform="rotate(60 35 35)"/>
+      <ellipse cx="35" cy="30" rx="13" ry="9" fill="#C45068" transform="rotate(120 35 35)"/>
+      <ellipse cx="35" cy="31" rx="9" ry="6.5" fill="#D4627A" transform="rotate(30 35 35)"/>
+      <ellipse cx="35" cy="31" rx="9" ry="6.5" fill="#D4627A" transform="rotate(90 35 35)"/>
+      <ellipse cx="35" cy="31" rx="9" ry="6.5" fill="#D4627A" transform="rotate(150 35 35)"/>
+      <circle cx="35" cy="35" r="7" fill="#E8C040"/>
+      <circle cx="33" cy="33" r="1.2" fill="#B89830"/>
+      <circle cx="37" cy="33" r="1.2" fill="#B89830"/>
+      <circle cx="35" cy="31" r="1.2" fill="#B89830"/>
+      <circle cx="33.5" cy="37" r="1" fill="#B89830"/>
+      <circle cx="36.5" cy="37" r="1" fill="#B89830"/>
+    </svg>`
+  },
+  {
+    id:'butterfly',name:'the butterfly',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <ellipse cx="35" cy="35" rx="2.5" ry="13" fill="#3A2010"/>
+      <path d="M33.5,23 Q27,14 22,9" fill="none" stroke="#3A2010" stroke-width="1.2"/>
+      <path d="M36.5,23 Q43,14 48,9" fill="none" stroke="#3A2010" stroke-width="1.2"/>
+      <circle cx="22" cy="9" r="2" fill="#3A2010"/>
+      <circle cx="48" cy="9" r="2" fill="#3A2010"/>
+      <path d="M35,28 Q18,19 11,30 Q14,43 35,40 Z" fill="#C4843A"/>
+      <path d="M35,28 Q52,19 59,30 Q56,43 35,40 Z" fill="#C4843A"/>
+      <path d="M35,39 Q16,41 13,53 Q21,61 35,49 Z" fill="#D49040"/>
+      <path d="M35,39 Q54,41 57,53 Q49,61 35,49 Z" fill="#D49040"/>
+      <circle cx="21" cy="32" r="5" fill="rgba(44,26,14,0.3)"/>
+      <circle cx="49" cy="32" r="5" fill="rgba(44,26,14,0.3)"/>
+      <circle cx="21" cy="32" r="2.2" fill="rgba(44,26,14,0.2)"/>
+      <circle cx="49" cy="32" r="2.2" fill="rgba(44,26,14,0.2)"/>
+    </svg>`
+  },
+  {
+    id:'snail',name:'the snail',
+    svg:`<svg width="60" height="60" viewBox="0 0 70 70" aria-hidden="true">
+      <path d="M13,50 Q7,43 14,39 Q25,33 47,37 Q57,40 58,46 Q57,55 48,56 Q33,60 13,50 Z" fill="#8BA840"/>
+      <circle cx="43" cy="40" r="15" fill="#D4A030"/>
+      <path d="M43,40 Q50,33 56,39 Q56,48 50,52 Q43,54 37,49 Q34,44 36,39 Q38,34 43,33 Q49,34 51,40 Q51,47 45,49 Q41,49 39,45 Q39,41 43,40"
+            fill="none" stroke="#8B6010" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M22,38 Q19,29 17,24" stroke="#6A8840" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      <path d="M29,36 Q29,27 27,23" stroke="#6A8840" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+      <circle cx="17" cy="23" r="2.5" fill="#1A0A04"/>
+      <circle cx="27" cy="22" r="2.5" fill="#1A0A04"/>
+      <circle cx="17" cy="23" r="0.7" fill="rgba(255,255,255,0.65)"/>
+      <circle cx="27" cy="22" r="0.7" fill="rgba(255,255,255,0.65)"/>
+    </svg>`
+  }
+];
+
+let selId=null,done=false;
+const grid=document.getElementById('spec-grid');
+const custIn=document.getElementById('custom-in');
+const noteIn=document.getElementById('note-in');
+const subBtn=document.getElementById('sub-btn');
+const ty=document.getElementById('ty');
+const formSec=document.getElementById('form-sec');
+const cabGrid=document.getElementById('cab-grid');
+
+// build specimen cards
+SPECIMENS.forEach(s=>{
+  const c=document.createElement('div');
+  c.className='s-card';
+  c.dataset.id=s.id;
+  c.innerHTML=`<span class="tick">&#10003;</span>${s.svg}<span class="s-name">${s.name}</span>`;
+  c.addEventListener('click',()=>{
+    if(done)return;
+    selId=s.id;
+    custIn.value='';
+    document.querySelectorAll('.s-card').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+    checkState();
+  });
+  grid.appendChild(c);
+});
+
+custIn.addEventListener('input',()=>{
+  if(custIn.value.trim()){
+    selId=null;
+    document.querySelectorAll('.s-card').forEach(x=>x.classList.remove('sel'));
+  }
+  checkState();
+});
+
+function checkState(){
+  subBtn.disabled=!(selId||custIn.value.trim())||done;
+}
+
+// Seeded responses — realistic prototype data for portfolio demonstration
+const SEED=[
+  {objId:'feather',objName:'the feather',note:'Light but shaped by everything that has happened to it.'},
+  {objId:'mushroom',objName:'the mushroom',note:'Most of what I am is underground and out of sight.'},
+  {objId:'snail',objName:'the snail',note:'I carry my home with me. Getting there takes the time it takes.'},
+  {objId:'fish',objName:'the fish',note:''},
+  {objId:'butterfly',objName:'the butterfly',note:'I am not the same thing I was at the start of this course.'},
+  {objId:'shell',objName:'the shell',note:'Something lived here once. The data never asks what.'},
+  {objId:'bird',objName:'the bird',note:''},
+  {objId:'flower',objName:'the flower',note:'Seasonal. Context-dependent. Not always visible.'},
+  {objId:'feather',objName:'the feather',note:''},
+  {objId:'snail',objName:'the snail',note:''},
+  {objName:'a fog bank',note:'Present but hard to pin down.'},
+  {objName:'a river',note:'Always moving, never the same twice.'},
+  {objId:'mushroom',objName:'the mushroom',note:''},
+  {objName:'a worn stone step',note:'Shaped by many people passing through, not just me.'},
+  {objId:'butterfly',objName:'the butterfly',note:''},
+  {objId:'shell',objName:'the shell',note:''},
+];
+
+// In-session cabinet (seed + any new submissions this visit)
+let cabinet=[...SEED];
+
+subBtn.addEventListener('click',()=>{
+  const objId=selId||custIn.value.trim();
+  const objName=selId?SPECIMENS.find(s=>s.id===selId)?.name||objId:custIn.value.trim();
+  const note=noteIn.value.trim();
+  subBtn.disabled=true;
+  subBtn.textContent='Pinning…';
+  setTimeout(()=>{
+    cabinet.unshift({objId,objName,note:note.substring(0,280)});
+    done=true;
+    formSec.style.display='none';
+    ty.classList.add('vis');
+    renderCab();
+  },600);
+});
+
+function smSvg(s){
+  return s.svg.replace('width="60" height="60"','width="46" height="46"');
+}
+
+function renderCab(){
+  cabGrid.innerHTML='';
+  cabinet.forEach(entry=>{
+    const spec=entry.objId?SPECIMENS.find(s=>s.id===entry.objId):null;
+    const div=document.createElement('div');
+    div.className='cab-entry';
+    const icon=spec
+      ?smSvg(spec)
+      :`<div style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:0.6rem;font-style:italic;color:var(--brown);border:1px dashed rgba(36,21,8,0.18);padding:4px;line-height:1.2;text-align:center">${entry.objName}</div>`;
+    div.innerHTML=`${icon}<span class="c-name">${entry.objName}</span>${entry.note?`<div class="c-note">&ldquo;${entry.note.substring(0,75)}${entry.note.length>75?'&hellip;':''}&rdquo;</div>`:''}`;
+    cabGrid.appendChild(div);
+  });
+}
+
+function loadCab(){cabGrid.innerHTML='<div class="loading-txt">Loading specimens…</div>';setTimeout(renderCab,400);}
+
+document.getElementById('change-mind').addEventListener('click',e=>{
+  e.preventDefault();
+  done=false;
+  ty.classList.remove('vis');
+  formSec.style.display='';
+  selId=null;
+  custIn.value='';
+  noteIn.value='';
+  document.querySelectorAll('.s-card').forEach(x=>x.classList.remove('sel'));
+  checkState();
+  formSec.scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+loadCab();
+</script>
+</body>
+</html>
